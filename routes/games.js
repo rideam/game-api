@@ -19,6 +19,23 @@ router.get('/', function(req, res, next){
 });
 
 router.post('/', [addNewGame, returnGameById]);  
+router.put('/:id', [updateGame, returnGameById]);
+
+function updateGame(req, res, next){
+  connection.query(
+    `UPDATE games
+      SET title = ?, platform = ?, year = ?
+      WHERE id = ?`, 
+    [req.body.title, req.body.platform, req.body.year, req.params.id], 
+    queryResults
+  ); 
+
+  function queryResults(err, results, fields){
+    if (err) return next(err); 
+    req.body.id = req.params.id
+    return next(); 
+  }
+}
 
 
 function addNewGame(req, res, next){
