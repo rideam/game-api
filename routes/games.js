@@ -21,6 +21,21 @@ router.get('/', function(req, res, next){
 router.post('/', [addNewGame, returnGameById]);  
 router.put('/:id', [updateGame, returnGameById]);
 
+router.delete('/:id', function(req, res, next){
+  connection.query(
+    `DELETE FROM games
+      WHERE id = ?`, 
+    [req.params.id],
+    queryResults
+  )
+
+  function queryResults(err, results, fields){
+    if (err) return next(err); 
+    return res.sendStatus(200);  
+  }
+});
+
+
 function updateGame(req, res, next){
   connection.query(
     `UPDATE games
